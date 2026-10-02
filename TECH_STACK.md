@@ -78,7 +78,7 @@ External services: Cardcom / PayPlus (payments), Morning (invoices), Resend (ema
 | Uptime | **Better Stack** | Alerts when the site is down. |
 | Tests | **Vitest** | Unit tests for the pricing engine, availability checks and iCal parsing, where most bugs will hide. |
 | End-to-end tests | **Playwright** | Guest booking flow and owner screens at 375 px phone width. |
-| Package manager | **pnpm** | |
+| Package manager | **pnpm** 10 | pnpm 12's native Windows binary failed to install on this machine; pnpm 10 is plain JavaScript and still maintained. |
 
 ## Conventions
 

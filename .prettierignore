@@ -1,0 +1,4 @@
+# Docs are written by hand; keep their table layout as-is
+*.md
+pnpm-lock.yaml
+next-env.d.ts
