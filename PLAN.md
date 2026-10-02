@@ -56,7 +56,7 @@ Open questions from the spec, and the phase that needs the answer:
 **Goal:** an empty but real app: Hebrew, right to left, deployed, with a database and a worker.
 
 - [x] Create the Next.js app with TypeScript, pnpm, Tailwind, shadcn/ui, ESLint and Prettier
-- [ ] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
+- [x] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
 - [ ] Postgres for development and tests in Docker (Docker Desktop on Windows)
 - [ ] Drizzle set up with the first migration
 - [ ] Worker process using pg-boss, with a heartbeat job that runs every minute

@@ -53,7 +53,7 @@ External services: Cardcom / PayPlus (payments), Morning (invoices), Resend (ema
 | Dates | **date-fns** + **@date-fns/tz** (Asia/Jerusalem) | Small, reliable date maths with time-zone support. |
 | Jewish holidays and Shabbat | **@hebcal/core** | Works offline with no API calls. Can also suggest holiday price periods. |
 | Translations | **next-intl** | Hebrew by default everywhere; English option for the guest widget. |
-| Font | **Heebo** or **Assistant** (Google Fonts) | Clear Hebrew fonts that read well on small screens. |
+| Font | **Heebo** (Google Fonts, self-hosted by next/font) | Clear Hebrew font that reads well on small screens, with Latin letters and numbers included. |
 
 ## Integrations
 
