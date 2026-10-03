@@ -13,6 +13,7 @@ Needs Node.js 20.9+, pnpm 10 (`npm install -g pnpm@10`) and Docker Desktop.
 pnpm install          # install packages
 cp .env.example .env  # local settings (first time only)
 pnpm db:start         # start Postgres (Docker Desktop must be running)
+pnpm db:migrate       # create or update the database tables
 pnpm dev              # run the app at http://localhost:3000
 ```
 
@@ -36,3 +37,6 @@ Both come back up on their own after a reboot once Docker Desktop is running.
 | `pnpm db:start` | Start the local Postgres databases |
 | `pnpm db:stop` | Stop them (development data is kept) |
 | `pnpm db:reset` | **Delete all local development data** and start with empty databases |
+| `pnpm db:generate` | Create a migration from changes in `src/db/schema` |
+| `pnpm db:migrate` | Apply new migrations to the development database |
+| `pnpm db:studio` | Browse and edit the development database in the browser |

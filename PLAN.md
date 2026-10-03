@@ -58,7 +58,7 @@ Open questions from the spec, and the phase that needs the answer:
 - [x] Create the Next.js app with TypeScript, pnpm, Tailwind, shadcn/ui, ESLint and Prettier
 - [x] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
 - [x] Postgres for development and tests in Docker (Docker Desktop on Windows)
-- [ ] Drizzle set up with the first migration
+- [x] Drizzle set up with the first migration
 - [ ] Worker process using pg-boss, with a heartbeat job that runs every minute
 - [ ] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
 - [ ] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment
@@ -106,7 +106,7 @@ Open questions from the spec, and the phase that needs the answer:
 **Goal:** the home screen. The owner sees and manages every booking in one place.
 
 - [ ] Database table: bookings (dates as `date`, source, status, guest details, notes). Blocked dates are stored as bookings of kind "block"
-- [ ] **Availability service:** the single function that locks the unit's row, checks for overlaps and saves, all in one transaction. Every way of creating a booking (owner, widget, iCal) goes through it
+- [ ] **Availability service:** the single function that locks the unit's row, checks for overlaps and saves, all in one transaction. Every way of creating a booking (owner, widget, iCal) goes through it. A database exclusion constraint (btree_gist, enabled in phase 0) also rejects overlapping direct bookings, as a safety net if the code has a bug
 - [ ] Tests for the availability service, including two bookings for the same night saved at the same moment: exactly one succeeds
 - [ ] Calendar screen: month view, one row per unit, days across, weeks starting Sunday
 - [ ] Booking bars with guest name and a colour per source; blocked dates in grey
