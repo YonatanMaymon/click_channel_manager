@@ -11,6 +11,7 @@ Needs Node.js 22.12+, pnpm 10 (`npm install -g pnpm@10`) and Docker Desktop.
 
 ```bash
 pnpm install          # install packages
+pnpm exec playwright install chromium  # browser for end-to-end tests (first time only)
 cp .env.example .env  # local settings (first time only)
 pnpm db:start         # start Postgres (Docker Desktop must be running)
 pnpm db:migrate       # create or update the database tables
@@ -27,6 +28,10 @@ Both come back up on their own after a reboot once Docker Desktop is running.
 
 The worker is a separate process from the web app. It runs background jobs (iCal sync, reminders, retries) with pg-boss, which keeps its queue in its own `pgboss` schema in the same database. For now it runs one job, a heartbeat that logs `[heartbeat] worker alive at <time>` every minute.
 
+## Tests
+
+Unit tests (Vitest) sit next to the code they test, named `*.test.ts`. End-to-end tests (Playwright) live in [e2e/](e2e) and open the app in Chromium at 375 px wide, the size of a small phone.
+
 ## Useful commands
 
 | Command | What it does |
@@ -37,6 +42,8 @@ The worker is a separate process from the web app. It runs background jobs (iCal
 | `pnpm worker:start` | Run the background worker without restarting on changes (Railway will run this) |
 | `pnpm lint` | Check the code for common mistakes (ESLint) |
 | `pnpm typecheck` | Check TypeScript types |
+| `pnpm test` | Run the unit tests (Vitest); in a terminal it keeps watching and re-runs on changes |
+| `pnpm test:e2e` | Run the end-to-end tests (Playwright) in a 375 px wide phone browser; starts the app if it isn't running |
 | `pnpm format` | Format all code (Prettier) |
 | `pnpm format:check` | Check formatting without changing files |
 | `pnpm db:start` | Start the local Postgres databases |
