@@ -2,10 +2,15 @@
   "name": "click-channel-manager",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "worker:dev": "tsx watch src/worker/index.ts",
+    "worker:start": "tsx src/worker/index.ts",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
@@ -26,15 +31,17 @@
     "next": "16.3.8",
     "next-intl": "^4.14.9",
     "pg": "^8.23.1",
+    "pg-boss": "^12.36.0",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "shadcn": "^4.21.1",
+    "tsx": "^4.23.15",
     "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22.20.5",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",

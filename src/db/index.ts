@@ -2,11 +2,9 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import * as schema from "./schema";
+import { databaseUrl } from "./url";
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set. Copy .env.example to .env.");
-}
+const connectionString = databaseUrl();
 
 // The dev server re-runs modules on every change; reuse one connection pool
 // so connections don't pile up.
