@@ -57,11 +57,11 @@ Open questions from the spec, and the phase that needs the answer:
 
 - [x] Create the Next.js app with TypeScript, pnpm, Tailwind, shadcn/ui, ESLint and Prettier
 - [x] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
-- [ ] Postgres for development and tests in Docker (Docker Desktop on Windows)
+- [x] Postgres for development and tests in Docker (Docker Desktop on Windows)
 - [ ] Drizzle set up with the first migration
 - [ ] Worker process using pg-boss, with a heartbeat job that runs every minute
 - [ ] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
-- [ ] Deploy to Railway: web app, worker and Postgres in an EU region, with a staging environment
+- [ ] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment
 - [ ] Sentry connected to both the web app and the worker
 - [ ] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
 

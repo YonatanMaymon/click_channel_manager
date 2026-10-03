@@ -9,7 +9,10 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:start": "docker compose up -d --wait",
+    "db:stop": "docker compose stop",
+    "db:reset": "docker compose down --volumes && pnpm db:start"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
