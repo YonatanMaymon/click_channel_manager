@@ -52,3 +52,27 @@ Unit tests (Vitest) sit next to the code they test, named `*.test.ts`. End-to-en
 | `pnpm db:generate` | Create a migration from changes in `src/db/schema` |
 | `pnpm db:migrate` | Apply new migrations to the development database |
 | `pnpm db:studio` | Browse and edit the development database in the browser |
+
+## Deploying (Railway)
+
+Railway runs three services in one project, all in the EU West (Amsterdam) region:
+
+| Service | Config file | What it runs |
+|---|---|---|
+| `web` | [railway/web.json](railway/web.json) | `pnpm build`, then `pnpm start`. Before each deploy it runs `pnpm db:migrate`; if a migration fails, the deploy stops and the old version keeps running. Traffic switches over only after `/api/health` answers 200, which needs a working database connection. |
+| `worker` | [railway/worker.json](railway/worker.json) | `pnpm worker:start`. Gets 30 seconds after SIGTERM to finish running jobs before Railway kills it. |
+| `Postgres` | (Railway template) | Postgres 18, the same major version as [compose.yaml](compose.yaml). |
+
+Only `web` runs migrations, so the two app services never migrate at the same time. A new worker can start a moment before `web` has migrated; a job that fails because a table isn't there yet is retried by pg-boss.
+
+### First-time setup (in the Railway dashboard)
+
+1. Create a project and add **Postgres**. Under its *Settings → Source*, make sure the image is `ghcr.io/railwayapp-templates/postgres-ssl:18`. Do this before storing any data, because a database volume can't simply switch major versions later. Set its region to EU West.
+2. Add a service from this GitHub repo, name it `web`. Under *Settings → Config-as-code* set the file path to `/railway/web.json`. Under *Settings → Networking* generate a public domain.
+3. Add a second service from the same repo, name it `worker`, with config file `/railway/worker.json`. Don't give it a domain.
+4. On both `web` and `worker`, add the variable `DATABASE_URL` = `${{Postgres.DATABASE_URL}}` (the private-network address, free of egress fees).
+5. Deploy. Check: the public domain shows the Hebrew page right to left, and the worker's logs show `[heartbeat] worker alive at …` every minute.
+
+### Staging
+
+In the project, *Environments → New environment → Duplicate `production`* and name it `staging`. It gets its own Postgres and its own copies of the variables. Point staging's services at a branch (for example `staging`) under *Settings → Source → Branch*, and production's at `master`.
