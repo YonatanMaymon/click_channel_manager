@@ -51,3 +51,6 @@ messages/*.d.json.ts
 
 # Obsidian vault settings (personal, not part of the project)
 .obsidian/
+
+# VibeWise learning notes (personal, not part of the project)
+/.vibe-wise/
