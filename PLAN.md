@@ -61,7 +61,7 @@ Open questions from the spec, and the phase that needs the answer:
 - [x] Drizzle set up with the first migration
 - [x] Worker process using pg-boss, with a heartbeat job that runs every minute
 - [x] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
-- [ ] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment. Set the worker's `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` to 30 so running jobs can finish during a deploy
+- [x] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment. Set the worker's `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` to 30 so running jobs can finish during a deploy
 - [ ] Sentry connected to both the web app and the worker
 - [ ] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
 
