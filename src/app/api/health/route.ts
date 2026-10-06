@@ -1,5 +1,5 @@
 // Railway calls this before switching traffic to a new deploy (see
-// railway/web.json). It answers 200 only if the app can reach the database,
+// .railway/railway.ts). It answers 200 only if the app can reach the database,
 // so a deploy that can't talk to Postgres never replaces a working one.
 import { sql } from "drizzle-orm";
 import { connection } from "next/server";
