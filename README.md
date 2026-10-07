@@ -40,6 +40,7 @@ Unit tests (Vitest) sit next to the code they test, named `*.test.ts`. End-to-en
 | `pnpm build` | Build the production version (also catches errors) |
 | `pnpm worker:dev` | Run the background worker locally, restarting when the code changes (restart it by hand after editing `.env`) |
 | `pnpm worker:start` | Run the background worker without restarting on changes (Railway will run this) |
+| `pnpm worker:test-error` | Send the worker one job that always fails, to check that errors reach Sentry (refuses to run in production) |
 | `pnpm lint` | Check the code for common mistakes (ESLint) |
 | `pnpm typecheck` | Check TypeScript types |
 | `pnpm test` | Run the unit tests (Vitest); in a terminal it keeps watching and re-runs on changes |
@@ -82,3 +83,14 @@ On Windows, `plan` and `apply` can fail with "requires Railway CLI 5.42.1 or new
 ```powershell
 $env:_ = "$env:APPDATA\npm\node_modules\@railway\cli\bin\railway.exe"; & $env:_ config plan
 ```
+
+## Errors (Sentry)
+
+Errors from the browser, the web server and the worker go to one Sentry project. Each error says where it came from: the `environment` is `staging` or `production`, and the `service` tag is `web` or `worker`. A failing worker job is reported once, when its last retry fails; earlier failed tries aren't reported, because they're often one-offs. Sentry is off when `NEXT_PUBLIC_SENTRY_DSN` isn't set, as on your own computer and in tests.
+
+Setup, once: fill in the DSN and the organization and project slugs at the top of [.railway/railway.ts](.railway/railway.ts) and apply it (see above). Then, in Railway, set `SENTRY_AUTH_TOKEN` on the `web` service in each environment. Create the token in Sentry under Settings > Auth Tokens (an organization token). It lets each build upload source maps, so browser errors point at our real code.
+
+To check that it works, on staging:
+
+- Browser and web server: open `/sentry-test` on the staging site and press both buttons. The page doesn't exist in production.
+- Worker: run `railway ssh --service worker` (with `staging` as the linked environment), then `pnpm worker:test-error`. One error should reach Sentry about half a minute to two minutes later, after the third failed try.

@@ -7,6 +7,7 @@ import {
   defineRailway,
   github,
   postgres,
+  preserve,
   project,
   service,
   volume,
@@ -19,11 +20,28 @@ const REGION = "europe-west4-drams3a"; // EU West, Amsterdam: closest to Israel
 // first created) is set to null to remove it.
 const ONE_REPLICA_IN_EU = { [REGION]: { numReplicas: 1 }, sfo: null };
 
-export default defineRailway(() => {
+// Sentry (error tracking), from the project's settings on sentry.io. None of
+// these are secret: the DSN is sent to every visitor's browser anyway. Until
+// the DSN is filled in, Sentry stays off.
+const SENTRY_DSN =
+  "https://551739726ab10f2b356707f7fbb8e3c2@o4512210084691968.ingest.de.sentry.io/4512212543733840"; // Settings > Projects > (project) > Client Keys (DSN)
+const SENTRY_ORG = "yehonatan-maymon"; // the organization slug, as in <slug>.sentry.io
+const SENTRY_PROJECT = "javascript-nextjs"; // the project slug
+
+export default defineRailway((ctx) => {
   const repo = github("YonatanMaymon/click_channel_manager", {
     branch: "phase-0-foundation",
     checkSuites: false,
   });
+
+  // Read by src/lib/sentry-options.ts in both the web app and the worker. The
+  // environment name lets Sentry show staging and production errors apart.
+  const sentryEnv = {
+    NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT: ctx.isEnvironment("production")
+      ? "production"
+      : "staging",
+  };
 
   // Postgres 18 (same major version as compose.yaml), with its data volume.
   // Imported as-is from Railway; don't change the volume or data is at risk.
@@ -53,7 +71,16 @@ export default defineRailway(() => {
       restartPolicyMaxRetries: 5,
       multiRegionConfig: ONE_REPLICA_IN_EU,
     },
-    env: { DATABASE_URL: db.env.DATABASE_URL }, // private network address
+    env: {
+      DATABASE_URL: db.env.DATABASE_URL, // private network address
+      ...sentryEnv,
+      // For uploading source maps during `pnpm build` (next.config.ts)
+      SENTRY_ORG,
+      SENTRY_PROJECT,
+      // Secret, so it's not in this file: set it by hand in Railway, on the web
+      // service in each environment. preserve() keeps the value already there.
+      SENTRY_AUTH_TOKEN: preserve(),
+    },
   });
 
   const worker = service("worker", {
@@ -69,7 +96,7 @@ export default defineRailway(() => {
       restartPolicyMaxRetries: 10,
       multiRegionConfig: ONE_REPLICA_IN_EU,
     },
-    env: { DATABASE_URL: db.env.DATABASE_URL },
+    env: { DATABASE_URL: db.env.DATABASE_URL, ...sentryEnv },
   });
 
   return project("click-chanel_manager", {

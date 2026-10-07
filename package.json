@@ -11,6 +11,7 @@
     "start": "next start",
     "worker:dev": "tsx watch src/worker/index.ts",
     "worker:start": "tsx src/worker/index.ts",
+    "worker:test-error": "tsx src/worker/send-test-error.ts",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest",
@@ -26,6 +27,8 @@
   },
   "dependencies": {
     "@next/env": "16.3.8",
+    "@sentry/nextjs": "^11.4.0",
+    "@sentry/node": "^11.4.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "drizzle-orm": "^0.45.3",
