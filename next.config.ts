@@ -22,4 +22,10 @@ export default withSentryConfig(withNextIntl(nextConfig), {
     deleteSourcemapsAfterUpload: true,
   },
   silent: !process.env.CI,
+  // Browser error reports go to this path on our own site, and our server
+  // passes them on to Sentry. Ad blockers block requests to sentry.io, but not
+  // a site's own addresses. A fixed, plain-looking path: blocker lists already
+  // include common ones like /monitoring, and the login check (PLAN.md,
+  // phase 1) must let this path through, which needs a path that never changes.
+  tunnelRoute: "/rpt",
 });
