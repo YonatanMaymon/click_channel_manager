@@ -55,15 +55,15 @@ Open questions from the spec, and the phase that needs the answer:
 
 **Goal:** an empty but real app: Hebrew, right to left, deployed, with a database and a worker.
 
-- [ ] Create the Next.js app with TypeScript, pnpm, Tailwind, shadcn/ui, ESLint and Prettier
-- [ ] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
-- [ ] Postgres for development and tests in Docker (Docker Desktop on Windows)
-- [ ] Drizzle set up with the first migration
-- [ ] Worker process using pg-boss, with a heartbeat job that runs every minute
-- [ ] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
-- [ ] Deploy to Railway: web app, worker and Postgres in an EU region, with a staging environment
-- [ ] Sentry connected to both the web app and the worker
-- [ ] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
+- [x] Create the Next.js app with TypeScript, pnpm, Tailwind, shadcn/ui, ESLint and Prettier
+- [x] Hebrew and RTL: `dir="rtl"`, Hebrew font, next-intl with Hebrew as the default
+- [x] Postgres for development and tests in Docker (Docker Desktop on Windows)
+- [x] Drizzle set up with the first migration
+- [x] Worker process using pg-boss, with a heartbeat job that runs every minute
+- [x] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
+- [x] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment. Set the worker's `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` to 30 so running jobs can finish during a deploy
+- [x] Sentry connected to both the web app and the worker
+- [x] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
 
 **Done when**
 - A Hebrew page is live on a Railway HTTPS address and reads right to left on your phone
@@ -77,6 +77,7 @@ Open questions from the spec, and the phase that needs the answer:
 - [ ] Database tables: owners, properties (including business type: עוסק פטור / עוסק מורשה)
 - [ ] `SmsProvider` interface and the chosen Israeli SMS gateway behind it
 - [ ] Better Auth with phone + SMS code and email + code; sessions expire
+- [ ] The login check (Next.js proxy) lets `/rpt` through: it's the Sentry tunnel in `next.config.ts`, and blocking it silently stops all browser error reports
 - [ ] Rate limits on sending login codes (SMS costs money and attracts abuse)
 - [ ] Helper that limits every query to the logged-in owner's property, with tests proving owner A can't read owner B's data
 - [ ] App layout for phones: bottom navigation, large tap targets
@@ -106,7 +107,7 @@ Open questions from the spec, and the phase that needs the answer:
 **Goal:** the home screen. The owner sees and manages every booking in one place.
 
 - [ ] Database table: bookings (dates as `date`, source, status, guest details, notes). Blocked dates are stored as bookings of kind "block"
-- [ ] **Availability service:** the single function that locks the unit's row, checks for overlaps and saves, all in one transaction. Every way of creating a booking (owner, widget, iCal) goes through it
+- [ ] **Availability service:** the single function that locks the unit's row, checks for overlaps and saves, all in one transaction. Every way of creating a booking (owner, widget, iCal) goes through it. A database exclusion constraint (btree_gist, enabled in phase 0) also rejects overlapping direct bookings, as a safety net if the code has a bug
 - [ ] Tests for the availability service, including two bookings for the same night saved at the same moment: exactly one succeeds
 - [ ] Calendar screen: month view, one row per unit, days across, weeks starting Sunday
 - [ ] Booking bars with guest name and a colour per source; blocked dates in grey

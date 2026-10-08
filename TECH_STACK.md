@@ -53,7 +53,7 @@ External services: Cardcom / PayPlus (payments), Morning (invoices), Resend (ema
 | Dates | **date-fns** + **@date-fns/tz** (Asia/Jerusalem) | Small, reliable date maths with time-zone support. |
 | Jewish holidays and Shabbat | **@hebcal/core** | Works offline with no API calls. Can also suggest holiday price periods. |
 | Translations | **next-intl** | Hebrew by default everywhere; English option for the guest widget. |
-| Font | **Heebo** or **Assistant** (Google Fonts) | Clear Hebrew fonts that read well on small screens. |
+| Font | **Heebo** (Google Fonts, self-hosted by next/font) | Clear Hebrew font that reads well on small screens, with Latin letters and numbers included. |
 
 ## Integrations
 
@@ -78,7 +78,7 @@ External services: Cardcom / PayPlus (payments), Morning (invoices), Resend (ema
 | Uptime | **Better Stack** | Alerts when the site is down. |
 | Tests | **Vitest** | Unit tests for the pricing engine, availability checks and iCal parsing, where most bugs will hide. |
 | End-to-end tests | **Playwright** | Guest booking flow and owner screens at 375 px phone width. |
-| Package manager | **pnpm** | |
+| Package manager | **pnpm** 10 | pnpm 12's native Windows binary failed to install on this machine; pnpm 10 is plain JavaScript and still maintained. |
 
 ## Conventions
 
@@ -89,7 +89,7 @@ Rules that apply across the codebase. Claude Code should follow these when writi
 - **Weeks start on Sunday** in every calendar and date picker.
 - **Owner data is separated by property.** Every owner-owned table has a `property_id`, and every query goes through a helper that limits it to the logged-in owner's property.
 - **Right to left first.** `dir="rtl"` on the page, and only logical Tailwind classes (`ms-`/`me-`, `ps-`/`pe-`, `start-`/`end-`), never `ml-`/`mr-`/`left-`/`right-`.
-- **Double-booking protection.** A direct booking locks the unit's row, checks for overlaps and inserts in one transaction. When the guest goes to the payment page, the dates become a pending hold that expires after 15 minutes; the payment webhook confirms it. Bookings imported by iCal are allowed to overlap so the clash can be detected and flagged.
+- **Double-booking protection.** A direct booking locks the unit's row, checks for overlaps and inserts in one transaction. A database exclusion constraint also rejects overlapping direct bookings and holds, as a safety net if the code has a bug. When the guest goes to the payment page, the dates become a pending hold that expires after 15 minutes; the payment webhook confirms it. Bookings imported by iCal are allowed to overlap so the clash can be detected and flagged.
 - **Payment and invoicing keys** are encrypted in the database (AES-256-GCM) with a master key from environment variables.
 - **External services** (payments, invoices, SMS, email) are always called through an interface in the code, never directly from screens or routes, so they can be swapped and mocked in tests.
 

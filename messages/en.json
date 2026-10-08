@@ -1,0 +1,15 @@
+{
+  "Metadata": {
+    "title": "Zimmer manager",
+    "description": "Manage units, prices and bookings for your zimmer in one place"
+  },
+  "HomePage": {
+    "title": "Welcome",
+    "subtitle": "This is where you'll manage your zimmer's units, prices and bookings."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The link may be wrong, or the page may have been removed.",
+    "backHome": "Back to home"
+  }
+}

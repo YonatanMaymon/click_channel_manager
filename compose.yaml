@@ -1,0 +1,62 @@
+# Local Postgres for development and tests. Start both with `pnpm db:start`.
+# Production must run the same major version (see the Railway task in PLAN.md).
+name: click-channel-manager
+
+# Settings shared by both databases below
+x-postgres: &postgres
+  image: postgres:18
+  # Come back up after Docker Desktop or Windows restarts, unless stopped with `pnpm db:stop`
+  restart: unless-stopped
+  healthcheck:
+    # -h 127.0.0.1 checks over TCP, so it passes only after first-time setup has finished
+    test:
+      [
+        "CMD-SHELL",
+        'pg_isready -h 127.0.0.1 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"',
+      ]
+    # Check every second while starting, then only every 30 seconds
+    start_period: 30s
+    start_interval: 1s
+    interval: 30s
+
+services:
+  # Development database. Data is kept in a Docker volume between restarts.
+  postgres:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: click
+      POSTGRES_PASSWORD: click
+      POSTGRES_DB: click_dev
+    ports:
+      # Reachable only from this computer. Set POSTGRES_PORT in .env if 5432 is taken.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Postgres 18 images keep data under /var/lib/postgresql/<version>
+      - postgres-data:/var/lib/postgresql
+
+  # Throwaway database for automated tests. Kept in memory and created fresh on
+  # every start; the test setup creates the tables it needs before each run.
+  postgres-test:
+    <<: *postgres
+    environment:
+      POSTGRES_USER: click
+      POSTGRES_PASSWORD: click
+      POSTGRES_DB: click_test
+    # Test data doesn't need to survive a crash, so skip the slow safety writes
+    command:
+      [
+        "postgres",
+        "-c",
+        "fsync=off",
+        "-c",
+        "synchronous_commit=off",
+        "-c",
+        "full_page_writes=off",
+      ]
+    ports:
+      - "127.0.0.1:${POSTGRES_TEST_PORT:-5433}:5432"
+    tmpfs:
+      - /var/lib/postgresql
+
+volumes:
+  postgres-data:
