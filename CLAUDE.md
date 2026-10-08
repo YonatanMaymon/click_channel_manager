@@ -1,5 +1,17 @@
 @AGENTS.md
 
+## Project documents
+
+PLAN.md is the guiding document: the build order, the decisions made so far and the status of every task. It is loaded below and has top priority over the other documents.
+
+@PLAN.md
+
+- **MVP Spec.md** describes what the product must do. Read the relevant part before building or changing any feature, to know how it should behave.
+- **TECH_STACK.md** describes the chosen libraries and services and why. Read it before adding a library, a service or a new kind of infrastructure.
+- Tick the box in PLAN.md when a task is finished. If a decision changes the plan, update PLAN.md in the same change.
+
+**When documents disagree:** stop before writing code for that part. Quote both passages, say that PLAN.md would win under the priority rule, suggest which document to fix, and wait for the owner's decision.
+
 ## Tests first, then code
 
 For any change with behaviour worth testing (prices, availability, sync, payments, permissions):

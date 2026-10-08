@@ -63,7 +63,7 @@ Open questions from the spec, and the phase that needs the answer:
 - [x] Vitest and Playwright set up, with one passing test each (Playwright at 375 px width)
 - [x] Deploy to Railway: web app, worker and Postgres 18 (same major version as compose.yaml) in an EU region, with a staging environment. Set the worker's `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` to 30 so running jobs can finish during a deploy
 - [x] Sentry connected to both the web app and the worker
-- [ ] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
+- [x] `CLAUDE.md` in the repo that points to the spec, TECH_STACK.md and PLAN.md
 
 **Done when**
 - A Hebrew page is live on a Railway HTTPS address and reads right to left on your phone
