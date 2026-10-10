@@ -81,7 +81,7 @@ Open questions from the spec, and the phase that needs the answer:
 - [ ] Rate limits on sending login codes (SMS costs money and attracts abuse)
 - [ ] Helper that limits every query to the logged-in owner's property, with tests proving owner A can't read owner B's data
 - [ ] App layout for phones: bottom navigation, large tap targets
-- [ ] Onboarding steps 1–2: sign up, property details (name, address, phone, check-in/out times)
+- [ ] Onboarding steps 1–2: sign up, property details (name, address, phone, check-in/out times). Saving step 2 creates the property and sets `user.property_id` in one transaction, only if the owner has no property yet, so a crash or a double tap can't leave orphan or duplicate properties
 - [ ] Settings: edit property details and upload a logo
 
 **Done when**
