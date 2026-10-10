@@ -14,7 +14,9 @@ if (process.env.NODE_ENV === "test") {
 
 export default defineConfig({
   dialect: "postgresql",
-  schema: "./src/db/schema",
+  // The index file only, not the whole folder, so the tests that sit next
+  // to each table aren't loaded as schema
+  schema: "./src/db/schema/index.ts",
   out: "./src/db/migrations",
   dbCredentials: { url: databaseUrl() },
   // camelCase in TypeScript, snake_case column names in the database
