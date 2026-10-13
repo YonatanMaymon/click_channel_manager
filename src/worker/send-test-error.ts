@@ -6,12 +6,12 @@ import "./env"; // first, so .env is loaded before other modules read it
 import { PgBoss } from "pg-boss";
 
 import { databaseUrl } from "@/db/url";
-import { sentryEnvironment } from "@/lib/sentry-options";
+import { appEnvironment } from "@/lib/app-environment";
 import { SENTRY_TEST_QUEUE } from "./jobs/sentry-test";
 
 async function main() {
   // A test error in production would look like a real problem to whoever reads it
-  if (sentryEnvironment === "production") {
+  if (appEnvironment === "production") {
     console.error("[sentry-test] refusing to run in production; use staging");
     process.exit(1);
   }
@@ -25,7 +25,7 @@ async function main() {
   await boss.start();
   const id = await boss.send(SENTRY_TEST_QUEUE);
   console.log(
-    `[sentry-test] sent job ${id} to "${SENTRY_TEST_QUEUE}" (environment: ${sentryEnvironment})`,
+    `[sentry-test] sent job ${id} to "${SENTRY_TEST_QUEUE}" (environment: ${appEnvironment})`,
   );
   await boss.stop();
 }

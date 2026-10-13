@@ -7,10 +7,17 @@ import * as Sentry from "@sentry/node";
 import { PgBoss } from "pg-boss";
 
 import { databaseUrl } from "@/db/url";
+import { appEnvironment } from "@/lib/app-environment";
+import { smsConfig } from "@/lib/sms";
 import { registerHeartbeat } from "./jobs/heartbeat";
 import { registerSentryTest } from "./jobs/sentry-test";
 
 async function main() {
+  // Throws if the SMS settings are missing in staging or production, so the
+  // worker stops at start instead of failing later on the first reminder or
+  // alert (see src/lib/sms/index.ts)
+  smsConfig(process.env, appEnvironment);
+
   // pg-boss keeps its jobs in its own "pgboss" schema, which it creates and
   // upgrades on start. Our Drizzle migrations never touch it.
   const boss = new PgBoss(databaseUrl());

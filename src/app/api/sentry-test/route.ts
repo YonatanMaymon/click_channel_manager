@@ -3,13 +3,13 @@
 // up the Sentry quota.
 import { connection } from "next/server";
 
-import { sentryEnvironment } from "@/lib/sentry-options";
+import { appEnvironment } from "@/lib/app-environment";
 
 export async function GET() {
   // Run on every request, never once at build time
   await connection();
 
-  if (sentryEnvironment === "production") {
+  if (appEnvironment === "production") {
     return new Response(null, { status: 404 });
   }
   throw new Error("Sentry test error from the web server");

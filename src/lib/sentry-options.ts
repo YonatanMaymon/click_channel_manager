@@ -6,19 +6,14 @@
 // both values are set in .railway/railway.ts.
 //
 // Both are NEXT_PUBLIC_ so Next.js copies them into the browser code at build
-// time. That only works for references written out in full, like the ones below.
-
-// "staging" or "production" on Railway. If it's missing from a production
-// build, assume production: the test error triggers stay closed there, so a
-// missing variable must never open them.
-export const sentryEnvironment =
-  process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT ??
-  (process.env.NODE_ENV === "production" ? "production" : "development");
+// time. That only works for references written out in full, like the one below
+// and the one in ./app-environment.ts.
+import { appEnvironment } from "./app-environment";
 
 export function sentryOptions(service: "web" | "worker") {
   return {
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    environment: sentryEnvironment,
+    environment: appEnvironment,
     // Which process the error came from, to filter by in Sentry
     initialScope: { tags: { service } },
     // Leave out IP addresses, cookies and request bodies, which can hold

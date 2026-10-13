@@ -2,11 +2,11 @@
 // only, so it isn't translated. Doesn't exist in production.
 import { notFound } from "next/navigation";
 
-import { sentryEnvironment } from "@/lib/sentry-options";
+import { appEnvironment } from "@/lib/app-environment";
 import { SentryTestButtons } from "./sentry-test-buttons";
 
 export default function SentryTestPage() {
-  if (sentryEnvironment === "production") {
+  if (appEnvironment === "production") {
     notFound();
   }
 
@@ -17,8 +17,8 @@ export default function SentryTestPage() {
     >
       <h1 className="text-2xl font-bold">Sentry test</h1>
       <p className="text-muted-foreground">
-        Environment: {sentryEnvironment}. Each button causes one error; check
-        that it shows up in Sentry.
+        Environment: {appEnvironment}. Each button causes one error; check that
+        it shows up in Sentry.
       </p>
       <SentryTestButtons />
     </main>

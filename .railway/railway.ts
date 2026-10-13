@@ -30,7 +30,7 @@ const SENTRY_PROJECT = "javascript-nextjs"; // the project slug
 
 export default defineRailway((ctx) => {
   const repo = github("YonatanMaymon/click_channel_manager", {
-    branch: "phase-0-foundation",
+    branch: "phase-1-login-and-property",
     checkSuites: false,
   });
 
@@ -41,6 +41,17 @@ export default defineRailway((ctx) => {
     NEXT_PUBLIC_SENTRY_ENVIRONMENT: ctx.isEnvironment("production")
       ? "production"
       : "staging",
+  };
+
+  // 019 SMS settings, read by src/lib/sms in both the web app (login codes)
+  // and the worker (reminders, alerts). Set them by hand in Railway, on both
+  // services in each environment: the token is secret, and the username and
+  // sender belong with it. preserve() keeps the values already there. Until
+  // they're set, both services refuse to start.
+  const smsEnv = {
+    SMS_019_USERNAME: preserve(),
+    SMS_019_TOKEN: preserve(),
+    SMS_SENDER: preserve(),
   };
 
   // Postgres 18 (same major version as compose.yaml), with its data volume.
@@ -74,6 +85,7 @@ export default defineRailway((ctx) => {
     env: {
       DATABASE_URL: db.env.DATABASE_URL, // private network address
       ...sentryEnv,
+      ...smsEnv,
       // For uploading source maps during `pnpm build` (next.config.ts)
       SENTRY_ORG,
       SENTRY_PROJECT,
@@ -96,7 +108,7 @@ export default defineRailway((ctx) => {
       restartPolicyMaxRetries: 10,
       multiRegionConfig: ONE_REPLICA_IN_EU,
     },
-    env: { DATABASE_URL: db.env.DATABASE_URL, ...sentryEnv },
+    env: { DATABASE_URL: db.env.DATABASE_URL, ...sentryEnv, ...smsEnv },
   });
 
   return project("click-chanel_manager", {

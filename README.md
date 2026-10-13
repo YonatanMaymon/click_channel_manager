@@ -41,6 +41,7 @@ Unit tests (Vitest) sit next to the code they test, named `*.test.ts`. End-to-en
 | `pnpm worker:dev` | Run the background worker locally, restarting when the code changes (restart it by hand after editing `.env`) |
 | `pnpm worker:start` | Run the background worker without restarting on changes (Railway will run this) |
 | `pnpm worker:test-error` | Send the worker one job that always fails, to check that errors reach Sentry (refuses to run in production) |
+| `pnpm sms:test-send <phone>` | Send one real SMS through 019 to check the connection (costs money); add `--dry` to have 019 check the request without sending. Needs the SMS settings in `.env` |
 | `pnpm lint` | Check the code for common mistakes (ESLint) |
 | `pnpm typecheck` | Check TypeScript types |
 | `pnpm test` | Run the unit tests (Vitest); in a terminal it keeps watching and re-runs on changes |
@@ -94,3 +95,11 @@ To check that it works, on staging:
 
 - Browser and web server: open `/sentry-test` on the staging site and press both buttons. The page doesn't exist in production.
 - Worker: run `railway ssh --service worker` (with `staging` as the linked environment), then `pnpm worker:test-error`. One error should reach Sentry about half a minute to two minutes later, after the third failed try.
+
+## SMS (019)
+
+Login codes, booking confirmations and alerts go out by SMS through 019 ([docs](https://docs.019sms.co.il/sms/)), behind one `SmsProvider` interface in [src/lib/sms](src/lib/sms). Only staging and production send real messages. Everywhere else the fake sender prints each message in the terminal (`[sms] (fake, not sent) ...`), so on your computer you copy login codes from there.
+
+Setup, once per environment: in Railway, set `SMS_019_USERNAME`, `SMS_019_TOKEN` and `SMS_SENDER` on both the `web` and `worker` services. Until all three are set, both services refuse to start, so the deploy fails and the old version keeps running. The sender is up to 11 English letters or digits and must be approved by 019. **019 tokens expire on a fixed date and can't be renewed**: note the date, and before it comes, create a new token and replace it in Railway.
+
+To check the connection: put the three settings in `.env` and run `pnpm sms:test-send <your phone>`.

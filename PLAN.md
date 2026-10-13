@@ -75,7 +75,7 @@ Open questions from the spec, and the phase that needs the answer:
 **Goal:** an owner can sign up, log in and describe their property.
 
 - [x] Database table: properties (including business type: עוסק פטור / עוסק מורשה). There is no separate owners table: an owner is a Better Auth user
-- [ ] `SmsProvider` interface and the chosen Israeli SMS gateway behind it
+- [x] `SmsProvider` interface and the chosen Israeli SMS gateway (019) behind it
 - [ ] Better Auth with phone + SMS code and email + code; sessions expire. Add a nullable `property_id` to its user table (empty until onboarding creates the property)
 - [ ] The login check (Next.js proxy) lets `/rpt` through: it's the Sentry tunnel in `next.config.ts`, and blocking it silently stops all browser error reports
 - [ ] Rate limits on sending login codes (SMS costs money and attracts abuse)

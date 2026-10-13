@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-// sentryEnvironment is worked out once, when the module loads, so each test
-// sets the variables and then loads a fresh copy
+// appEnvironment is worked out once, when the module loads, so each test sets
+// the variables and then loads a fresh copy
 async function environmentWith(vars: {
   NEXT_PUBLIC_SENTRY_ENVIRONMENT?: string;
   NODE_ENV: string;
@@ -12,14 +12,14 @@ async function environmentWith(vars: {
   );
   vi.stubEnv("NODE_ENV", vars.NODE_ENV);
   vi.resetModules();
-  return (await import("./sentry-options")).sentryEnvironment;
+  return (await import("./app-environment")).appEnvironment;
 }
 
 afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("sentryEnvironment", () => {
+describe("appEnvironment", () => {
   it("uses the environment Railway sets", async () => {
     expect(
       await environmentWith({
@@ -35,8 +35,9 @@ describe("sentryEnvironment", () => {
     );
   });
 
-  // The test error triggers open everywhere except production, so a
-  // production build with the variable missing must still count as production
+  // The test error triggers open and the fake SMS sender is used everywhere
+  // except staging and production, so a production build with the variable
+  // missing must still count as production
   it("counts a production build with no environment set as production", async () => {
     expect(await environmentWith({ NODE_ENV: "production" })).toBe(
       "production",
