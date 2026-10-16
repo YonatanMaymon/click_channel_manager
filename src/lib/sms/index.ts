@@ -12,7 +12,7 @@ import type { ReportError, SmsProvider } from "./sms-provider";
 
 export { InvalidPhoneError, SmsSendError } from "./errors";
 export { createFakeSmsProvider, type FakeSmsProvider } from "./fake";
-export { toSmsPhone } from "./phone";
+export { toAccountPhone, toSmsPhone } from "./phone";
 export { create019Provider } from "./sms019";
 export type { ReportError, SmsProvider } from "./sms-provider";
 

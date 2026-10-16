@@ -34,7 +34,7 @@ Open questions from the spec, and the phase that needs the answer:
 
 | Question | Needed by | Suggested answer |
 |---|---|---|
-| Owner login: phone, email or both? | Phase 1 | Both: phone + SMS code as the main option, email as a fallback |
+| Owner login: phone, email or both? | Phase 1 | Decided: sign up by phone + SMS code only (Israeli mobiles); an owner can add a verified email after signup and then also log in by email code |
 | Is a deposit always required, or can an owner choose "pay on arrival"? | Phase 4 | Let the owner set the deposit to 0% (pay on arrival); the card token is still saved for cancellation fees |
 | Which add-ons are most common? | Phase 4 | Ask in owner interviews; these become the default add-ons list |
 | Which Israeli portals support iCal? | Phase 5 | Check each portal and collect a sample `.ics` file from each for tests |
@@ -76,12 +76,14 @@ Open questions from the spec, and the phase that needs the answer:
 
 - [x] Database table: properties (including business type: עוסק פטור / עוסק מורשה). There is no separate owners table: an owner is a Better Auth user
 - [x] `SmsProvider` interface and the chosen Israeli SMS gateway (019) behind it
-- [ ] Better Auth with phone + SMS code and email + code; sessions expire. Add a nullable `property_id` to its user table (empty until onboarding creates the property)
+- [x] Better Auth with phone + SMS code and email + code; sessions expire. Add a nullable `property_id` to its user table (empty until onboarding creates the property). Decided: only phones create accounts; codes last 5 minutes and die after 5 wrong guesses; sessions last 30 days from last use; one account per email, saved only once verified
+- [x] `EmailProvider` interface with Resend behind it (moved here from phase 5 for email login codes). Until there is a domain, staging sends from Resend's test sender, which only reaches the Resend account's own address; production email waits for the domain
 - [ ] The login check (Next.js proxy) lets `/rpt` through: it's the Sentry tunnel in `next.config.ts`, and blocking it silently stops all browser error reports
 - [ ] Rate limits on sending login codes (SMS costs money and attracts abuse)
 - [ ] Helper that limits every query to the logged-in owner's property, with tests proving owner A can't read owner B's data
 - [ ] App layout for phones: bottom navigation, large tap targets
 - [ ] Onboarding steps 1–2: sign up, property details (name, address, phone, check-in/out times). Saving step 2 creates the property and sets `user.property_id` in one transaction, only if the owner has no property yet, so a crash or a double tap can't leave orphan or duplicate properties
+- [ ] Email set-up after signup (logic is done in src/lib/auth/email.ts): a centred "set up email" prompt with a skip option; if skipped, a small yellow banner with a close (x) that comes back the next time the app is opened, until an email is verified. Also a "log in with email" option on the login screen
 - [ ] Settings: edit property details and upload a logo
 
 **Done when**
@@ -145,7 +147,7 @@ Open questions from the spec, and the phase that needs the answer:
 **Goal:** bookings from Booking.com, Airbnb and portals appear on the calendar, and the app's bookings block dates on those channels.
 
 - [ ] Database tables: channels, sync log
-- [ ] `EmailProvider` interface with Resend behind it; domain verified for sending
+- [ ] Domain verified in Resend for sending (the `EmailProvider` itself was built in phase 1); set `EMAIL_FROM` to an address on it
 - [ ] Channels screen: list with last sync time and status; add a channel (name, unit, iCal link); "sync now" button
 - [ ] iCal export: one link per unit with an unguessable token, listing every booking and block from every source
 - [ ] Import job in the worker: each channel every 10–15 minutes, spread out so they don't all run at once

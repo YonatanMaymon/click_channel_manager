@@ -54,6 +54,24 @@ export default defineRailway((ctx) => {
     SMS_SENDER: preserve(),
   };
 
+  // Resend email settings, read by src/lib/email in both services (login
+  // codes now, alerts later). Set by hand like the SMS ones: the key is
+  // secret. Until there's a domain, EMAIL_FROM is onboarding@resend.dev.
+  // Until they're set, both services refuse to start.
+  const emailEnv = {
+    RESEND_API_KEY: preserve(),
+    EMAIL_FROM: preserve(),
+  };
+
+  // Login settings, read by src/lib/auth in the web app only. Set by hand:
+  // BETTER_AUTH_SECRET is at least 32 random characters, different in each
+  // environment; BETTER_AUTH_URL is the web service's public https address.
+  // Until they're set, the web app refuses to start.
+  const authEnv = {
+    BETTER_AUTH_SECRET: preserve(),
+    BETTER_AUTH_URL: preserve(),
+  };
+
   // Postgres 18 (same major version as compose.yaml), with its data volume.
   // Imported as-is from Railway; don't change the volume or data is at risk.
   const db = postgres("Postgres", { region: REGION });
@@ -86,6 +104,8 @@ export default defineRailway((ctx) => {
       DATABASE_URL: db.env.DATABASE_URL, // private network address
       ...sentryEnv,
       ...smsEnv,
+      ...emailEnv,
+      ...authEnv,
       // For uploading source maps during `pnpm build` (next.config.ts)
       SENTRY_ORG,
       SENTRY_PROJECT,
@@ -108,7 +128,12 @@ export default defineRailway((ctx) => {
       restartPolicyMaxRetries: 10,
       multiRegionConfig: ONE_REPLICA_IN_EU,
     },
-    env: { DATABASE_URL: db.env.DATABASE_URL, ...sentryEnv, ...smsEnv },
+    env: {
+      DATABASE_URL: db.env.DATABASE_URL,
+      ...sentryEnv,
+      ...smsEnv,
+      ...emailEnv,
+    },
   });
 
   return project("click-chanel_manager", {

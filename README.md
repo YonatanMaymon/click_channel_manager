@@ -103,3 +103,15 @@ Login codes, booking confirmations and alerts go out by SMS through 019 ([docs](
 Setup, once per environment: in Railway, set `SMS_019_USERNAME`, `SMS_019_TOKEN` and `SMS_SENDER` on both the `web` and `worker` services. Until all three are set, both services refuse to start, so the deploy fails and the old version keeps running. The sender is up to 11 English letters or digits and must be approved by 019. **019 tokens expire on a fixed date and can't be renewed**: note the date, and before it comes, create a new token and replace it in Railway.
 
 To check the connection: put the three settings in `.env` and run `pnpm sms:test-send <your phone>`.
+
+## Email (Resend)
+
+Email login codes (and later alerts and invoices) go out through Resend ([docs](https://resend.com/docs/api-reference/emails/send-email)), behind one `EmailProvider` interface in [src/lib/email](src/lib/email). Same rules as SMS: only staging and production send real email; on your computer the fake sender prints each email in the terminal (`[email] (fake, not sent) ...`).
+
+Setup, once per environment: in Railway, set `RESEND_API_KEY` and `EMAIL_FROM` on both the `web` and `worker` services; until both are set, both services refuse to start. We have no domain yet, so `EMAIL_FROM` is `onboarding@resend.dev`, Resend's test sender, which **only delivers to the address the Resend account was opened with**. Once a domain is verified in Resend, change `EMAIL_FROM` to an address on it.
+
+## Login (Better Auth)
+
+Owners log in with [Better Auth](https://better-auth.com), set up in [src/lib/auth](src/lib/auth): an Israeli mobile number and a 6-digit code by SMS (a new number gets a new account), or, once they've added and verified one, a code by email. Codes last 5 minutes and are cancelled after 5 wrong guesses; a login lasts 30 days from the last time the app was used.
+
+Setup, once per environment: in Railway, set on the `web` service `BETTER_AUTH_SECRET` (at least 32 random characters, e.g. from `openssl rand -base64 32`, different in each environment) and `BETTER_AUTH_URL` (the web service's public https address). Until both are set, the web app refuses to start. Changing the secret logs every owner out.

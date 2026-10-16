@@ -15,6 +15,13 @@
       "when": 1791625423148,
       "tag": "0001_create_properties",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792033740728,
+      "tag": "0002_create_auth_tables",
+      "breakpoints": true
     }
   ]
 }

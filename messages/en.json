@@ -5,11 +5,31 @@
   },
   "HomePage": {
     "title": "Welcome",
-    "subtitle": "This is where you'll manage your zimmer's units, prices and bookings."
+    "subtitle": "This is where you'll manage your zimmer's units, prices and bookings.",
+    "loggedInAs": "Logged in with {phone}",
+    "logout": "Log out"
   },
   "NotFound": {
     "title": "Page not found",
     "description": "The link may be wrong, or the page may have been removed.",
     "backHome": "Back to home"
+  },
+  "Login": {
+    "title": "Log in",
+    "phoneIntro": "Enter your mobile number and we will text you a login code. The first time, a new account is opened for you.",
+    "phoneLabel": "Mobile number",
+    "sendCode": "Send me a code",
+    "codeIntro": "We texted a code to {phone}. It is valid for 5 minutes.",
+    "codeLabel": "6-digit code",
+    "verify": "Log in",
+    "resend": "Send a new code",
+    "changePhone": "Change number",
+    "resent": "We sent a new code.",
+    "errors": {
+      "invalid_phone": "That does not look like an Israeli mobile number.",
+      "send_failed": "We could not send an SMS right now. Please try again in a moment.",
+      "wrong_code": "Wrong code. Please try again.",
+      "new_code_needed": "This code is no longer valid. Ask for a new one."
+    }
   }
 }
